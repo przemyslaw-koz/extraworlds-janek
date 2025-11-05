@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>EXTRA WORLDS – Janek</title>
+    <!-- Arcade/pixel fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0a0b0e; 
+        --panel: #1b2531;
+        --text: #eaf0f6;
+        --accent: #66fcf1;
+        --accent2: #ff3aa7;
+        --maxw: 1100px;
+        --shadow: 0 0 8px rgba(102, 252, 241, 0.45),
+          0 0 24px rgba(102, 252, 241, 0.25);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        color: var(--text);
+        background: radial-gradient(
+          1200px 600px at 50% -20%,
+          #12141a 0,
+          var(--bg) 60%
+        );
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial,
+          sans-serif;
+        overflow-x: hidden;
+      }
+      body:before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background: repeating-linear-gradient(
+          transparent 0 2px,
+          rgba(255, 255, 255, 0.03) 2px 3px
+        );
+        mix-blend-mode: overlay;
+      }
+
+      .wrap {
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding: 24px 20px 80px;
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      .brand {
+        font-family: "Press Start 2P", system-ui;
+        letter-spacing: 1px;
+        font-size: 14px;
+        opacity: 0.9;
+      }
+
+      .lang {
+        display: flex;
+        gap: 10px;
+      }
+      .lang button {
+        cursor: pointer;
+        padding: 10px 14px;
+        border-radius: 14px;
+        border: 2px solid transparent;
+        background: #131920;
+        color: var(--text);
+        font-weight: 700;
+      }
+      .lang button.active {
+        border-color: var(--accent);
+        box-shadow: var(--shadow);
+      }
+
+      .card {
+        background: linear-gradient(
+          180deg,
+          rgba(31, 40, 51, 0.9),
+          rgba(23, 29, 38, 0.9)
+        );
+        border-radius: 22px;
+        padding: 22px;
+        display: grid;
+        gap: 18px;
+        grid-template-columns: 260px 1fr;
+        align-items: center;
+        border: 1px solid rgba(102, 252, 241, 0.08);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      }
+
+      .cover {
+        background: #0b0c10;
+        border-radius: 16px;
+        padding: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid #2a394a;
+        box-shadow: inset 0 0 0 3px #0b0c10, 0 0 0 4px #2a394a,
+          0 0 18px rgba(0, 0, 0, 0.5);
+      }
+      .cover img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+      }
+
+      .title {
+        font-family: "Press Start 2P", system-ui;
+        font-size: clamp(20px, 4vw, 36px);
+        margin: 0 0 8px;
+        text-shadow: 0 0 8px rgba(255, 58, 167, 0.35),
+          0 0 14px rgba(102, 252, 241, 0.25);
+      }
+      .subtitle {
+        font-family: "VT323", monospace;
+        font-size: clamp(16px, 2.6vw, 24px);
+        margin: 0.1rem 0 1rem;
+        opacity: 0.85;
+      }
+
+      .rules {
+        background: #0e1218;
+        border: 1px solid rgba(102, 252, 241, 0.12);
+        border-radius: 14px;
+        padding: 14px;
+        line-height: 1.6;
+      }
+      .rules h3 {
+        font-family: "VT323", monospace;
+        font-size: 26px;
+        margin: 0 0 6px;
+        color: var(--accent);
+      }
+      .rules ul {
+        margin: 0;
+        padding-left: 18px;
+      }
+
+      .actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 12px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        cursor: pointer;
+        user-select: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 16px;
+        border-radius: 14px;
+        border: 0;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+      }
+      .btn.primary {
+        background: linear-gradient(90deg, var(--accent), #7ffdf5);
+        color: #05202a;
+        box-shadow: var(--shadow);
+      }
+      .btn.secondary {
+        background: #131920;
+        color: var(--text);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .btn:active {
+        transform: translateY(1px);
+      }
+
+      .frame-wrap {
+        display: none;
+        margin-top: 22px;
+      }
+      .ratio {
+        position: relative;
+        width: 100%;
+        max-width: var(--maxw);
+        aspect-ratio: 4/3;
+        border-radius: 18px;
+        overflow: hidden;
+        background: #000;
+        border: 2px solid rgba(102, 252, 241, 0.25);
+        box-shadow: 0 0 24px rgba(102, 252, 241, 0.18);
+      }
+      iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+
+      footer {
+        opacity: 0.75;
+        font-size: 0.95rem;
+        margin-top: 14px;
+      }
+
+      @media (max-width: 860px) {
+        .card {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* === PLAYING MODE (mobile-first) === */
+      .frame-wrap {
+        display: none;
+        margin-top: 22px;
+      }
+      body.playing header,
+      body.playing .card {
+        display: none;
+      }
+      body.playing .frame-wrap {
+        display: block;
+      }
+
+      @media (max-width: 700px) {
+        body.playing .wrap {
+          padding: 0;
+        }
+        body.playing .ratio {
+          border-radius: 0;
+          border-width: 0;
+        }
+        body.playing {
+          background: #000;
+          overflow: hidden;
+        }
+        .exit {
+          position: fixed;
+          top: 12px;
+          left: 12px;
+          z-index: 60;
+        }
+      }
+
+      /* Back/Exit button */
+      .exit {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 12px;
+        border: 0;
+        font-weight: 800;
+        background: linear-gradient(90deg, var(--accent2), #ff7bc4);
+        color: white;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+      }
+      body.playing .exit {
+        display: inline-flex;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="brand">EXTRA WORLDS – JANEK</div>
+        <div class="lang">
+          <button id="plBtn" class="active" aria-pressed="true">Polski</button>
+          <button id="enBtn" aria-pressed="false">English</button>
+        </div>
+      </header>
+
+      <section class="card">
+        <div class="cover">
+          <img src="cover.png" alt="Okładka gry / Game cover" />
+        </div>
+        <div>
+          <h1 id="title" class="title">Zagraj w moją grę!</h1>
+          <p id="subtitle" class="subtitle">Wybierz język i rozpocznij.</p>
+
+          <div class="rules" id="rulesBox"></div>
+
+          <div class="actions">
+            <button id="startBtn" class="btn primary">Zacznij grę</button>
+            <a
+              id="openScratch"
+              class="btn secondary"
+              target="_blank"
+              rel="noopener"
+              >Otwórz w Scratch</a
+            >
+          </div>
+        </div>
+      </section>
+
+      <section class="frame-wrap" id="frameWrap">
+        <button id="backBtn" class="exit" title="Powrót do menu">⟵ Menu</button>
+        <div class="ratio">
+          <iframe
+            id="scratchFrame"
+            title="Scratch game"
+            allowtransparency="true"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <footer id="hint">
+          Jeśli sterowanie klawiszami nie działa, stuknij w grę, by nadać jej
+          fokus.
+        </footer>
+      </section>
+    </div>
+
+    <script>
+      const PROJECT_ID = "1237915889";
+      const TEXT = {
+        pl: {
+          title: "Zagraj w moją grę!",
+          subtitle: "Wybierz język i rozpocznij.",
+          start: "Zacznij grę",
+          openScratch: "Otwórz w Scratch",
+          hint: "Jeśli sterowanie klawiszami nie działa, stuknij w grę, by nadać jej fokus.",
+          rules: `
+          <h3>Zasady (PL)</h3>
+          <ul>
+            <li>Sterowanie: strzałka w lewo / prawo.</li>
+            <li>Zbieraj punkty za jabłka, unikaj czaszek.</li>
+            <li>Każde jabłko dodaje jeden punkt.</li>
+            <li>Każda czaszka zabiera pięć punktów.</li>
+            <li>Gdy punkty spadną poniżej 0 → <em>Koniec Gry</em>.</li>
+          </ul>
+        `,
+        },
+        en: {
+          title: "Play my game!",
+          subtitle: "Choose language and start.",
+          start: "Start game",
+          openScratch: "Open in Scratch",
+          hint: "If keys don't work, tap the game to focus the frame.",
+          rules: `
+          <h3>Rules (EN)</h3>
+          <ul>
+            <li>Controls: left/right arrow keys.</li>
+            <li>Collect points for apples, avoid skulls.</li>
+            <li>Each apple gives you one point.</li>
+            <li>Each skull takes five points from you.</li>
+            <li>If points drop below 0 → <em>Game Over</em>.</li>
+          </ul>
+        `,
+        },
+      };
+
+      const $ = (sel) => document.querySelector(sel);
+      const title = $("#title");
+      const subtitle = $("#subtitle");
+      const rulesBox = $("#rulesBox");
+      const startBtn = $("#startBtn");
+      const openScratch = $("#openScratch");
+      const hint = $("#hint");
+      const frame = $("#scratchFrame");
+      const frameWrap = $("#frameWrap");
+      const plBtn = $("#plBtn");
+      const enBtn = $("#enBtn");
+
+      const setLang = (lang) => {
+        localStorage.setItem("lang", lang);
+        const T = TEXT[lang];
+        title.textContent = T.title;
+        subtitle.textContent = T.subtitle;
+        startBtn.textContent = T.start;
+        openScratch.textContent = T.openScratch;
+        rulesBox.innerHTML = T.rules;
+        hint.textContent = T.hint;
+        plBtn.classList.toggle("active", lang === "pl");
+        enBtn.classList.toggle("active", lang === "en");
+        plBtn.setAttribute("aria-pressed", lang === "pl");
+        enBtn.setAttribute("aria-pressed", lang === "en");
+        document.title =
+          lang === "pl" ? "EXTRA WORLDS – Janek" : "EXTRA WORLDS – Janek (EN)";
+      };
+
+      const ratioBox = document.querySelector(".ratio");
+
+      function fitFrame() {
+        
+        const vw = window.visualViewport?.width || window.innerWidth;
+        const vh = window.visualViewport?.height || window.innerHeight;
+
+        
+        const btn = document.getElementById("backBtn");
+        let padTop = 0;
+        if (document.body.classList.contains("playing") && btn) {
+          const r = btn.getBoundingClientRect();
+          
+          padTop = Math.ceil(r.bottom + 12);
+        }
+
+        const target = 4 / 3;
+        let w = vw;
+        let h = vh - padTop;
+        if (h < 120) h = 120;
+
+        if (w / h > target) {
+          w = Math.floor(h * target);
+        } else {
+          h = Math.floor((w * 3) / 4);
+        }
+
+        ratioBox.style.width = w + "px";
+        ratioBox.style.height = h + "px";
+        ratioBox.style.margin = "0 auto";
+      }
+
+      const startGame = () => {
+        document.body.classList.add("playing");
+        frame.src = `https://scratch.mit.edu/projects/${PROJECT_ID}/embed`;
+        openScratch.href = `https://scratch.mit.edu/projects/${PROJECT_ID}`;
+        frameWrap.style.display = "block";
+        fitFrame();
+        frameWrap.scrollIntoView({ behavior: "smooth", block: "start" });
+      };
+
+      startBtn.addEventListener("click", startGame);
+
+      const backBtn = document.getElementById("backBtn");
+      backBtn.addEventListener("click", () => {
+        document.body.classList.remove("playing");
+        frame.src = "";
+        frameWrap.style.display = "none";
+        ratioBox.style.width = "";
+        ratioBox.style.height = "";
+        ratioBox.style.margin = "";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      window.addEventListener("resize", () => {
+        if (document.body.classList.contains("playing")) fitFrame();
+      });
+      window.addEventListener("orientationchange", () => {
+        setTimeout(() => {
+          if (document.body.classList.contains("playing")) fitFrame();
+        }, 200);
+      });
+
+      plBtn.addEventListener("click", () => setLang("pl"));
+      enBtn.addEventListener("click", () => setLang("en"));
+
+      setLang(
+        localStorage.getItem("lang") ||
+          (navigator.language?.startsWith("pl") ? "pl" : "en")
+      );
+      openScratch.href = `https://scratch.mit.edu/projects/${PROJECT_ID}`;
+    </script>
+  </body>
+</html>
