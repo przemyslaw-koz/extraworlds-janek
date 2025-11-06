@@ -378,6 +378,7 @@
       const enBtn = $("#enBtn");
 
       const setLang = (lang) => {
+	window.umami?.track('set_lang', { lang });
         localStorage.setItem("lang", lang);
         const T = TEXT[lang];
         title.textContent = T.title;
