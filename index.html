@@ -428,6 +428,7 @@
       }
 
       const startGame = () => {
+	window.umami?.track('start_game');
         document.body.classList.add("playing");
         frame.src = `https://scratch.mit.edu/projects/${PROJECT_ID}/embed`;
         openScratch.href = `https://scratch.mit.edu/projects/${PROJECT_ID}`;
@@ -440,6 +441,7 @@
 
       const backBtn = document.getElementById("backBtn");
       backBtn.addEventListener("click", () => {
+        window.umami?.track('back_to_menu');
         document.body.classList.remove("playing");
         frame.src = "";
         frameWrap.style.display = "none";
